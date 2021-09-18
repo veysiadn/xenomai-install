@@ -43,7 +43,6 @@ echo
 echo "## Configuring Xenomai"
 cd xenomai-3
 ./scripts/bootstrap
-cd ..
 
 echo
 echo "Downloading Linux Kernel"
