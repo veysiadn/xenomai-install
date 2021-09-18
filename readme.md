@@ -7,7 +7,8 @@
 - [Xenomai 3.1](http://rtt-lwr.readthedocs.io/en/latest/rtpc/xenomai3.html)
 - [Blog Reds](https://blog.reds.ch/?p=1308)
 - [Ethercat Master - Xenomai - SOEM Paper](https://www.koreascience.or.kr/article/JAKO202121137920799.pdf)
-- 
+
+
 ## Download links
 - [Linux kernel](https://www.kernel.org/pub/linux/kernel/v5.x/)
 - [Xenomai](  http://git.xenomai.org/xenomai-3.git)
@@ -66,7 +67,7 @@ make menuconfig
 
 __Recommended options:__
 
--[Image](https://github.com/veysiadn/xenomai-install/blob/master/XenomaiKernelConfig.png)
+- ![Image](https://github.com/veysiadn/xenomai-install/blob/master/XenomaiKernelConfig.png)
 
 ```
 * General setup
