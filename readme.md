@@ -4,13 +4,14 @@
 
 - [Xenomai docs](http://xenomai.org/installing-xenomai-3-x/#Installation_steps)
 - [Readthedocs.io](http://rtt-lwr.readthedocs.io/en/latest/rtpc/xenomai.html)
-- [Xenomai 3.0.5](http://rtt-lwr.readthedocs.io/en/latest/rtpc/xenomai3.html)
-
+- [Xenomai 3.1](http://rtt-lwr.readthedocs.io/en/latest/rtpc/xenomai3.html)
+- [Blog Reds](https://blog.reds.ch/?p=1308)
+- [Ethercat Master - Xenomai - SOEM Paper](https://www.koreascience.or.kr/article/JAKO202121137920799.pdf)
+- 
 ## Download links
-
-- [Linux kernel](https://www.kernel.org/pub/linux/kernel/v4.x/)
-- [Xenomai](http://xenomai.org/downloads/xenomai/stable/)
-- [I-pipe](http://xenomai.org/downloads/ipipe/v4.x/x86/)
+- [Linux kernel](https://www.kernel.org/pub/linux/kernel/v5.x/)
+- [Xenomai](  http://git.xenomai.org/xenomai-3.git)
+- [I-pipe](https://xenomai.org/downloads/ipipe/v5.x/x86/)
 
 
 ## Commands
@@ -18,7 +19,11 @@
 ### Prerequisites
 
 ```sh
-sudo apt install -y kernel-package qt5-default libssl-dev git autoconf libtool automake curl
+sudo apt-get update
+sudo apt install -y qt5-default git curl
+sudo apt-get install -y devscripts debhelper dh-kpatches findutils kernel-package libncurses-dev fakeroot zlib1g-dev autotools-dev 
+sudo apt-get install -y autoconf automake libtool git libssl-dev libelf-dev libcurses5-dev bison flex
+
 ```
 
 
@@ -41,14 +46,14 @@ cd ..
 
 echo
 echo "Downloading Linux Kernel"
-wget https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.9.51.tar.gz
-tar xfv linux-4.9.51.tar.gz
-wget http://xenomai.org/downloads/ipipe/v4.x/x86/ipipe-core-4.9.51-x86-4.patch
+wget https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-5.4.133.tar.xz
+tar -xf linux-5.4.133.tar.xz
+wget https://xenomai.org/downloads/ipipe/v5.x/x86/ipipe-core-5.4.133-x86-6.patch
 
 echo
 echo "Patching Linux Kernel"
-cd linux-4.9.51
-./../xenomai-3/scripts/prepare-kernel.sh --arch=x86_64 --ipipe=../ipipe-core-4.9.51-x86-4.patch
+cd linux-5.4.133
+./../xenomai-3/scripts/prepare-kernel.sh --arch=x86_64 --ipipe=../ipipe-core-5.4.133-x86-6.patch
 cd ..
 
 
@@ -56,12 +61,11 @@ cd ..
 
 Now configure the kernel
 ```sh
-yes "" | make oldconfig
-make xconfig
+make menuconfig
 ```
 
 __Recommended options:__
-
+-[Image](https://github.com/veysiadn/xenomai-install/XenomaiKernelConfig.png)
 ```
 * General setup
   --> Local version - append to kernel release: -xenomai-3.0.5
@@ -116,7 +120,7 @@ CONCURRENCY_LEVEL=$(nproc) make-kpkg --rootcmd fakeroot --initrd kernel_image ke
 Install kernel
 ```sh
 cd ..
-sudo dpkg -i linux-headers-4.9.51-xenomai-3.0.6_4.9.51-xenomai-3.0.6-10.00.Custom_amd64.deb linux-image-4.9.51-xenomai-3.0.6_4.9.51-xenomai-3.0.6-10.00.Custom_amd64.deb 
+sudo dpkg -i *.deb 
 
 ```
 
@@ -134,14 +138,32 @@ sudo usermod -a -G xenomai $USER
 To configure grub it is suggested to use grub-customizer
 
 ```sh
-sudo add-apt-repository ppa:danielrichter2007/grub-customizer
-sudo apt-get update
-sudo apt-get install -y grub-customizer
+sudo nano /etc/default/grub
+```
+__Recommended Grub:__
 
 ```
+  GRUB_DEFAULT="Advanced options for Ubuntu>Ubuntu, with Linux 5.4.133-xenomai-3.1"
+  #GRUB_DEFAULT=saved
+  #GRUB_SAVEDEFAULT=true
+  # Comment the following lines
+  #GRUB_HIDDEN_TIMEOUT=0
+  #GRUB_HIDDEN_TIMEOUT_QUIET=true
+  GRUB_TIMEOUT=5
+  GRUB_CMDLINE_LINUX_DEFAULT="quiet splash xenomai.allowed_group=1234"
+  GRUB_CMDLINE_LINUX=""
+  after customization run
+```
+__If you have Intel HD Graphics____
+```
+  GRUB_CMDLINE_LINUX_DEFAULT="quiet splash i915.enable_rc6=0 i915.enable_dc=0 noapic xenomai.allowed_group=1234"
+  # This removes powersavings from the graphics, that creates disturbing interruptions.
+```
+__If you have Intel Skylake Processor____
+```
+  GRUB_CMDLINE_LINUX_DEFAULT="quiet splash i915.enable_rc6=0 i915.enable_dc=0 xeno_nucleus.xenomai_gid=1234 nosmap"
 
-after customization run
-
+```
 ```sh
 sudo update-grub
 sudo reboot
@@ -150,13 +172,13 @@ sudo reboot
 __Test if installed__:
 ```sh
 uname -a
-# Returns: Linux polena 4.9.51-xenomai-3.0.6 #2 SMP Sun Mar 4 12:25:57 PST 2018 x86_64 x86_64 x86_64 GNU/Linux
+# Returns: Linux 5.4.133-xenomai-3.1 #2 SMP Sun Sept 5 12:25:57 PST 2021 x86_64 x86_64 x86_64 GNU/Linux
 dmesg | grep Xenomai
 # Returns:
 #[    1.454252] [Xenomai] scheduling class idle registered.
 #[    1.454253] [Xenomai] scheduling class rt registered.
 #[    1.454400] I-pipe: head domain Xenomai registered.
-#[    1.456208] [Xenomai] Cobalt v3.0.6 (Stellar Parallax) 
+#[    1.456208] [Xenomai] Cobalt v3.1 (xxx)
 
 ```
 
@@ -183,31 +205,3 @@ export OROCOS_TARGET=xenomai
 echo 'source ~/.xenomai_rc' >> ~/.bashrc
 source ~/.bashrc
 ```
-
-## Installing Balena
-
-```sh
-sh balena-install.sh
-```
-
----
-
-There are two options to do RT scheduling within a container:
-
-Add the SYS_NICE capability
-
-docker run --cap-add SYS_NICE ...
-
-Use privileged mode with --privileged flag
-
-docker run --privileged ...
-
-Privileged mode is said to be insecure, so option 1 would be best to only add the capability you need.
-
-You may also have to enable realtime scheduling in your sysctl if you are running as the root user (default for Docker container):
-
-sysctl -w kernel.sched_rt_runtime_us=-1
-To make that permanent (update your image):
-
-echo 'kernel.sched_rt_runtime_us=-1' > /etc/sysctl.conf
-https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities
