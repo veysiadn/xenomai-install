@@ -65,7 +65,11 @@ make menuconfig
 ```
 
 __Recommended options:__
-
+##### You can download config file in this repository and copy to your linux-5.4.133 folder or you can manually do configuration.
+```sh
+  cd linux-5.4.133 
+  sudo cp ~/xenomai-install/configfile .config
+```
 - ![Image](https://github.com/veysiadn/xenomai-install/blob/master/XenomaiKernelConfig.png)
 
 ```
@@ -156,12 +160,12 @@ __Recommended Grub:__
   GRUB_CMDLINE_LINUX=""
   after customization run
 ```
-__If you have Intel HD Graphics____
+__If you have Intel HD Graphics___
 ```
   GRUB_CMDLINE_LINUX_DEFAULT="quiet splash i915.enable_rc6=0 i915.enable_dc=0 noapic xenomai.allowed_group=1234"
   # This removes powersavings from the graphics, that creates disturbing interruptions.
 ```
-__If you have Intel Skylake Processor____
+__If you have Intel Skylake Processor___
 ```
   GRUB_CMDLINE_LINUX_DEFAULT="quiet splash i915.enable_rc6=0 i915.enable_dc=0 xeno_nucleus.xenomai_gid=1234 nosmap"
 
