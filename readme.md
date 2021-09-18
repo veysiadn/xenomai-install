@@ -71,7 +71,7 @@ __Recommended options:__
 
 ```
 * General setup
-  --> Local version - append to kernel release: -xenomai-3.0.5
+  --> Local version - append to kernel release: -xenomai-3.1
   --> Timers subsystem
       --> High Resolution Timer Support (Enable)
 * Xenomai/cobalt
