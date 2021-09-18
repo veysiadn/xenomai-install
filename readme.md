@@ -65,7 +65,9 @@ make menuconfig
 ```
 
 __Recommended options:__
--[Image](https://github.com/veysiadn/xenomai-install/XenomaiKernelConfig.png)
+
+-[Image](https://github.com/veysiadn/xenomai-install/blob/master/XenomaiKernelConfig.png)
+
 ```
 * General setup
   --> Local version - append to kernel release: -xenomai-3.0.5
