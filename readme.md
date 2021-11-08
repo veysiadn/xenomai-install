@@ -23,7 +23,7 @@
 sudo apt-get update
 sudo apt install -y qt5-default git curl
 sudo apt-get install -y devscripts debhelper dh-kpatches findutils kernel-package libncurses-dev fakeroot zlib1g-dev autotools-dev 
-sudo apt-get install -y autoconf automake libtool git libssl-dev libelf-dev libcurses5-dev bison flex
+sudo apt-get install -y autoconf automake libtool git libssl-dev libelf-dev libncurses5-dev bison flex
 
 ```
 
